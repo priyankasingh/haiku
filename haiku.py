@@ -81,21 +81,36 @@ one_syllable_words = [k for k,v in syllables.items() if v == 1]
 
 # print one_syllable_words
 
+def get_next_word(key, remaining_number_of_syllables):
+    possible_next_word = filter(lambda w : syllables.get(w, 9999) < remaining_number_of_syllables and syllables.get(w, 9999) != count_syllables(start_word) and not w == key, words.get(key, []))
+    if len(possible_next_word) == 0:
+        possible_next_word = filter(lambda w : syllables.get(w, 9999) < remaining_number_of_syllables and not w == key, words.get(key, []))
+    if len(possible_next_word) == 0:
+        return None
+    return random.choice(possible_next_word)
 
 def generate_line(start_word, number_of_syllables):
     start_syllables = count_syllables(start_word)
     next_word = start_word
     remaining_number_of_syllables = number_of_syllables - start_syllables
     line = start_word
+    last_word = None
     while remaining_number_of_syllables > 0:
-        possible_next_word = filter(lambda w : syllables.get(w, 9999) < remaining_number_of_syllables and syllables.get(w, 9999) != count_syllables(start_word) and not w == next_word, words[next_word])
-        if len(possible_next_word) == 0:
-            possible_next_word = filter(lambda w : syllables.get(w, 9999) < remaining_number_of_syllables and not w == next_word, words[next_word])
-        # print next_word, possible_next_word
-        if len(possible_next_word) == 0:
-            next_word = random.choice(one_syllable_words)
+        if last_word == None:
+            last_word = next_word
+            next_word = get_next_word(next_word, remaining_number_of_syllables)
         else:
-            next_word = random.choice(possible_next_word)
+            last_word = next_word
+            key = last_word + " " + next_word
+            next_word = get_next_word(key, remaining_number_of_syllables)
+            if not next_word:
+                next_word = get_next_word(next_word, remaining_number_of_syllables)
+
+
+        # print next_word, possible_next_word
+        if not next_word:
+            next_word = random.choice(one_syllable_words)
+
         line += " " + next_word
         remaining_number_of_syllables -= syllables[next_word]
     return line
@@ -106,7 +121,7 @@ def generate_haiku(start_word):
     line3 = generate_line(random.choice(words.keys()), 5)
     return "%s\n%s\n%s" % (line1, line2, line3)
 
-start_word = raw_input("Start word\n")
+start_word = raw_input("Start word: ")
 
 if start_word == "":
     start_word = random.choice(words.keys())
