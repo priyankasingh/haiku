@@ -8,16 +8,18 @@ booklist = []
 with open('book.txt','r') as f:
     for line in f:
         for word in line.split():
-           booklist.append(word)
+           booklist.append(word.lower())
 
 print len(booklist)
 
 for i in range(len(booklist)):
-	if booklist[i].isalpha() and i < len(booklist)-1:
-		ifbooklist[i].lower() not in dictionary:
-			dictionary[booklist[i].lower()]=[re.sub(r'\W+', '',booklist[i+1].lower())]
+	if booklist[i].isalpha() and booklist[i+1].isalpha() and i < len(booklist)-2:
+		workingstring = booklist[i] +" "+ booklist[i+1]
+		#print workingstring
+		if workingstring not in dictionary:
+			dictionary[workingstring]=[re.sub(r'\W+', '',booklist[i+2])]
 		else:
-			dictionary[booklist[i].lower()].append(re.sub(r'\W+', '',booklist[i+1].lower()))
+			dictionary[workingstring].append(re.sub(r'\W+', '',booklist[i+2]))
 		
 print dictionary
 		
