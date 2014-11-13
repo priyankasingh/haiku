@@ -24,7 +24,6 @@ words = dictionary
 
 
 import random
-import requests
 import sys
 
 def count_syllables(word):
