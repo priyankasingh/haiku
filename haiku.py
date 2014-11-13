@@ -13,10 +13,10 @@ with open('book.txt','r') as f:
 print len(booklist)
 
 for i in range(len(booklist)):
-	if booklist[i].isalpha():
-		if i < len(booklist)-1 and booklist[i].lower() not in dictionary:
+	if booklist[i].isalpha() and i < len(booklist)-1:
+		ifbooklist[i].lower() not in dictionary:
 			dictionary[booklist[i].lower()]=[re.sub(r'\W+', '',booklist[i+1].lower())]
-		elif i < len(booklist)-1:
+		else:
 			dictionary[booklist[i].lower()].append(re.sub(r'\W+', '',booklist[i+1].lower()))
 		
 print dictionary
