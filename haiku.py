@@ -8,20 +8,18 @@ booklist = []
 with open('book.txt','r') as f:
     for line in f:
         for word in line.split():
-           booklist.append(word.lower())
+            if word.isalpha():
+                booklist.append(word.lower())
 
-print len(booklist)
+def add_to_dictionary(key, value):
+    if not key in dictionary:
+        dictionary[key] = []
+    dictionary[key].append(value)
 
 for i in range(len(booklist)):
-	if booklist[i].isalpha() and booklist[i+1].isalpha() and i < len(booklist)-2:
-		workingstring = booklist[i] +" "+ booklist[i+1]
-		#print workingstring
-		if workingstring not in dictionary:
-			dictionary[workingstring]=[re.sub(r'\W+', '',booklist[i+2])]
-		else:
-			dictionary[workingstring].append(re.sub(r'\W+', '',booklist[i+2]))
-		
-print dictionary
+    if i > 1:
+        add_to_dictionary(booklist[i-2] + " " + booklist[i-1], booklist[i])
+        add_to_dictionary(booklist[i-1], booklist[i])
 
 words = dictionary
 
@@ -103,8 +101,8 @@ def generate_line(start_word, number_of_syllables):
             last_word = next_word
             next_word = get_next_word(next_word, remaining_number_of_syllables)
         else:
-            last_word = next_word
             key = last_word + " " + next_word
+            last_word = next_word
             next_word = get_next_word(key, remaining_number_of_syllables)
             if not next_word:
                 next_word = get_next_word(next_word, remaining_number_of_syllables)
